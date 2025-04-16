@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Sentimental Analysis Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fafad2; /* Pale yellow background */
+            background-image: url('https://www.w3schools.com/w3images/flowers.jpg'); /* Flower background */
+            background-size: cover; /* Makes sure the image covers the full screen */
+            background-position: center; /* Centers the image */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-attachment: fixed; /* Keeps the background fixed while scrolling */
+        }
+
+        h1 {
+            font-size: 2em;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Adds shadow to text for better visibility */
+        }
+
+        #chat-container {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        /* Loading spinner */
+        #loading {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            margin: auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            input[type="text"] {
+                width: 70%;
+            }
+            button {
+                width: 80%;
+            }
+        }
+    </style>
+    <script>
+        async function sendMessage() {
+            let userMessage = document.getElementById("userMessage").value;
+            document.getElementById("loading").style.display = "block"; // Show loading spinner
+
+            let response = await fetch("/analyze", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userMessage })
+            });
+
+            let data = await response.json();
+            document.getElementById("response").innerText = "Sentiment: " + data.sentiment;
+            document.getElementById("loading").style.display = "none"; // Hide loading spinner
+        }
+    </script>
+</head>
+<body>
+    <h1>My Sentimental Analysis Chatbot</h1>
+    <div id="chat-container">
+        <input type="text" id="userMessage" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Analyze</button>
+        <p id="response"></p>
+        <!-- Loading Spinner -->
+        <div id="loading">
+            <div class="spinner"></div>
+        </div>
+    </div>
+</body>
+</html>
